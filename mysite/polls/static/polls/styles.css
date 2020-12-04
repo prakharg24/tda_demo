@@ -1,0 +1,39 @@
+body, html {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+.container {
+  width: 100%;
+  height: 100%;
+  margin: 0px;
+}
+
+.leftpane {
+    width: 23%;
+    height: 93%;
+    float: left;
+    background-color: rosybrown;
+    border-collapse: collapse;
+    padding: 10px;
+}
+
+.rightpane {
+  width: 75%;
+  height: 93%;
+  position: relative;
+  float: right;
+  background-color: yellow;
+  border-collapse: collapse;
+  text-align: center;
+}
+
+.toppane {
+  width: 100%;
+  height: 7%;
+  border-collapse: collapse;
+  background-color: #4da6ff;
+  text-align: center;
+  font-size: 35px;
+}

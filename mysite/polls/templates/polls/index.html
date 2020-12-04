@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'polls/styles.css' %}">
+  </head>
+  <body>
+    <div class="container">
+      <div class="toppane">
+        <b>Time Delay Attack Detection and Characterization Demo</b>
+      </div>
+      <div class="leftpane">
+        <form action="/polls/" method="post"  enctype="multipart/form-data">
+            <b>{% csrf_token %}
+            {{ form.as_p }}</b>
+            <input type="submit" value="Apply">
+        </form>
+      </div>
+
+      <div class="rightpane">
+        <!-- <center> -->
+        {% load static %}
+        <img src="{% static 'polls/signal.png' %}" alt="Original Signal" width="80%"/>
+        {% if protection %}
+          <br>
+          <br>
+          <img src="{% static 'polls/classification.png' %}" alt="Classification Output" width="80%"/>
+          <br>
+          <br>
+          <img src="{% static 'polls/regression.png' %}" alt="Regression Output" width="80%"/>
+        {% endif %}
+        <!-- </center> -->
+      </div>
+      <!-- <div style="clear:both; font-size:1px;"></div> -->
+    </div>
+
+  </body>
+</html>
+
+<!--
+{% if latest_question_list %}
+    <ul>
+    {% for question in latest_question_list %}
+        <li><a href="/polls/{{ question.id }}/">{{ question.question_text }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No polls are available.</p>
+{% endif %} -->
