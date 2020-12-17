@@ -13,12 +13,23 @@ from .datareader import create_graphs, load_data
 cps_choices = [('ppcs', 'PPCS'), ('agc', 'AGC')]
 protection_choices = [(True, 'Enable'), (False, 'Disable')]
 mitigation_choices = [(True, 'Enable'), (False, 'Disable')]
-class TDAForm(forms.Form):
+
+class SystemForm(forms.Form):
     system = forms.ChoiceField(widget=forms.RadioSelect, choices=cps_choices, label="Cyber Physical System")
+
+class PPCSTDAForm(forms.Form):
+    system = forms.ChoiceField(widget=forms.RadioSelect, choices=cps_choices, label="Cyber Physical System", initial='ppcs')
     protection = forms.ChoiceField(widget=forms.RadioSelect, choices=protection_choices, label="Attack Detection and Classification")
-    mitigation = forms.ChoiceField(widget=forms.RadioSelect, choices=mitigation_choices, label="Attack Mitigation")
-    tda_value = forms.IntegerField(label="TDA Value")
-    tda_location = forms.IntegerField(label="TDA Location")
+    # mitigation = forms.ChoiceField(widget=forms.RadioSelect, choices=mitigation_choices, label="Attack Mitigation")
+    tda_value = forms.IntegerField(label="TDA Value", max_value=50, min_value=0)
+    tda_location = forms.IntegerField(label="TDA Location", max_value=1200, min_value=800)
+
+class AGCTDAForm(forms.Form):
+    system = forms.ChoiceField(widget=forms.RadioSelect, choices=cps_choices, label="Cyber Physical System", initial='agc')
+    protection = forms.ChoiceField(widget=forms.RadioSelect, choices=protection_choices, label="Attack Detection and Classification")
+    # mitigation = forms.ChoiceField(widget=forms.RadioSelect, choices=mitigation_choices, label="Attack Mitigation")
+    tda_value = forms.IntegerField(label="TDA Value", max_value=10, min_value=0)
+    tda_location = forms.IntegerField(label="TDA Location", max_value=220, min_value=100)
 
 # def index(request):
 #     sum = 1 + 2
@@ -46,22 +57,32 @@ def detail(request, question_id):
     return HttpResponse(output)
 
 def track(request):
-    form = TDAForm(request.POST)
+    form = SystemForm(request.POST)
     # print(form)
     load_data()
     if form.is_valid():
         print(form.cleaned_data)
-        create_graphs(form.cleaned_data)
-        if(form.cleaned_data["protection"]=="True"):
-            context = {'form' : form, 'protection':True}
+        if(form.cleaned_data["system"]=="ppcs"):
+            form2 = PPCSTDAForm(request.POST)
         else:
-            context = {'form' : form, 'protection':False}
-        template = loader.get_template('polls/index.html')
-        output = template.render(context, request)
-        return HttpResponse(output)
+            form2 = AGCTDAForm(request.POST)
+        if(form2.is_valid()):
+            create_graphs(form2.cleaned_data)
+            if(form2.cleaned_data["protection"]=="True"):
+                context = {'form' : form2, 'protection':True, 'details':True}
+            else:
+                context = {'form' : form2, 'protection':False, 'details':True}
+            template = loader.get_template('polls/index.html')
+            output = template.render(context, request)
+            return HttpResponse(output)
+        else:
+            template = loader.get_template('polls/index.html')
+            context = {'form': form2, 'protection':False, 'details':False}
+            output = template.render(context, request)
+            return HttpResponse(output)
 
     template = loader.get_template('polls/index.html')
-    context = {'form': form, 'protection':False}
+    context = {'form': form, 'protection':False, 'details':False}
     output = template.render(context, request)
     return HttpResponse(output)
 

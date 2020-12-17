@@ -19,15 +19,17 @@
 
       <div class="rightpane">
         <!-- <center> -->
-        {% load static %}
-        <img src="{% static 'polls/signal.png' %}" alt="Original Signal" width="80%"/>
-        {% if protection %}
-          <br>
-          <br>
-          <img src="{% static 'polls/classification.png' %}" alt="Classification Output" width="80%"/>
-          <br>
-          <br>
-          <img src="{% static 'polls/regression.png' %}" alt="Regression Output" width="80%"/>
+        <!-- {% load static %} -->
+        {% if details %}
+          <img src="{% static 'polls/signal.png' %}" alt="Original Signal" width="90%"/>
+          {% if protection %}
+            <br>
+            <!-- <br> -->
+            <img src="{% static 'polls/classification.png' %}" alt="Classification Output" width="90%"/>
+            <!-- <br> -->
+            <br>
+            <img src="{% static 'polls/regression.png' %}" alt="Regression Output" width="90%"/>
+          {% endif %}
         {% endif %}
         <!-- </center> -->
       </div>

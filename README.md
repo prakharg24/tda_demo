@@ -24,6 +24,6 @@ python manage.py runserver
 
 1. The figures displayed and the CSS style files are all stored in `mysite/polls/static/polls/`
 2. The HTML template files are stored in `mysite/polls/templates/polls/`
-3. The HTML parser is present in `views.py`
-4. All the signal processing and graph creation happens in `datareader.py`
+3. The HTML parser is present in `mysite/polls/views.py`
+4. All the signal processing and graph creation happens in `mysite/polls/datareader.py`
 5. The dataset is present as CSV files in `mysite/polls/dataset/`

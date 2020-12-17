@@ -65,25 +65,28 @@ def plot_main_signal(signal_arr, gt_data, conf, protection):
     ymax = np.max(signal_arr[0])
     ymin = np.min(signal_arr[0])
     yrange = ymax - ymin
+    fig = plt.gcf()
     plt.plot(y_arr, signal_arr[0], color='brown')
     # plt.plot(y_arr[49:], moving_average(normal_signal, 50), color='green')
     plt.vlines(x=gt_data[1], ymin=ymin, ymax=ymax, color='red')
-    plt.text(conf['signal_start'], ymin + yrange*0.12, "Delay Attack : " + str(gt_data[0]) + " sec, launched at t=" + str(gt_data[1]), color="red")
+    fig.text(0.78, 0.32, "Delay Attack : " + str(gt_data[0]) + " sec, \nlaunched at t=" + str(gt_data[1]), color="red")
     print(protection)
     if(signal_arr[4]==1 and protection=="True"):
         plt.vlines(x=signal_arr[2] + conf['col_freq']*conf['lower_step'], ymin=ymin, ymax=ymax, color='blue')
-        plt.text(conf['signal_start'], ymin + yrange*0.06, "Attack Detected at t=" + str(signal_arr[2]), color="blue")
+        fig.text(0.78, 0.26, "Attack Detected at t=" + str(signal_arr[2]), color="blue")
         plt.vlines(x=signal_arr[1] + conf['col_freq']*conf['lower_step'], ymin=ymin, ymax=ymax, color='green')
-        plt.text(conf['signal_start'], ymin, "Delay Value Predicted : " + str(int(signal_arr[3])) + " sec, at t=" + str(signal_arr[1]), color="green")
+        fig.text(0.78, 0.16, "Delay Value Predicted : " + str(int(signal_arr[3])) + " sec, \nat t=" + str(signal_arr[1]), color="green")
 
     plt.title("Original Signal Input")
 
-    fig = plt.gcf()
+    plt.subplots_adjust(right=0.75)
+    # fig.text(0.84, 0.5, "Something", fontsize=14)
     fig.set_facecolor("yellow")
-    fig.set_size_inches(12, 4)
+    fig.set_size_inches(12, 3.5)
     # os.remove('polls/static/polls/signal.png')
     fig.savefig('polls/static/polls/signal.png')
     fig.clf()
+
 
 def plot_classification(signal_arr, gt_data, conf):
     y_arr = range(conf['signal_start'], conf['signal_end'] + conf['col_freq'], conf['col_freq']*conf['lower_step'])
@@ -129,7 +132,7 @@ def plot_regression(signal_arr, gt_data, conf):
         counter += 1
 
     plt.plot(y_arr[-len(x_arr):], x_arr, color='green')
-    plt.yticks([0, 10, 20, 30, 40, 50])
+    # plt.yticks([0, 10, 20, 30, 40, 50])
     plt.title("Regression Head Output (Updated every " +  str(conf['col_freq']*conf['lower_step']) + " sec)")
     fig = plt.gcf()
     fig.set_facecolor("yellow")
