@@ -57,7 +57,7 @@ def load_data():
 
     # average_normal = moving_average(normal_signal, 50)
 
-def plot_main_signal(signal_arr, gt_data, conf, protection):
+def plot_main_signal(signal_arr, gt_data, conf, protection, system):
     global normal_signal
 
     y_arr = range(conf['signal_start'], conf['signal_end'] + conf['col_freq'], conf['col_freq'])
@@ -78,6 +78,10 @@ def plot_main_signal(signal_arr, gt_data, conf, protection):
         fig.text(0.78, 0.16, "Delay Value Predicted : " + str(int(signal_arr[3])) + " sec, \nat t=" + str(signal_arr[1]), color="green")
 
     plt.title("Original Signal Input")
+    if(system=='ppcs'):
+        plt.ylabel('GasFlow Pressure')
+    else:
+        plt.ylabel('System Frequency (Hz)')
 
     plt.subplots_adjust(right=0.75)
     # fig.text(0.84, 0.5, "Something", fontsize=14)
@@ -108,7 +112,8 @@ def plot_classification(signal_arr, gt_data, conf):
 
     plt.plot(y_arr[-len(x_arr):], x_arr, color='blue')
     # plt.yticks([0, 1])
-    plt.title("Classification Head Output (Updated every " +  str(conf['col_freq']*conf['lower_step']) + " sec)")
+    plt.title("Delay Attack Detection (Updated every " +  str(conf['col_freq']*conf['lower_step']) + " sec)")
+    # plt.set_xlabel("Time (s)")
     fig = plt.gcf()
     fig.set_facecolor("yellow")
     fig.set_size_inches(12, 2)
@@ -133,7 +138,8 @@ def plot_regression(signal_arr, gt_data, conf):
 
     plt.plot(y_arr[-len(x_arr):], x_arr, color='green')
     # plt.yticks([0, 10, 20, 30, 40, 50])
-    plt.title("Regression Head Output (Updated every " +  str(conf['col_freq']*conf['lower_step']) + " sec)")
+    plt.title("Delay Attack Characterization (Updated every " +  str(conf['col_freq']*conf['lower_step']) + " sec)")
+    plt.ylabel("Delay Value (s)")
     fig = plt.gcf()
     fig.set_facecolor("yellow")
     fig.set_size_inches(12, 2)
@@ -164,7 +170,7 @@ def create_graphs(arg_dict):
 
     print("Best Match : ", best_match)
 
-    plot_main_signal(data_dict[best_match], best_match, system_conf, arg_dict["protection"])
+    plot_main_signal(data_dict[best_match], best_match, system_conf, arg_dict["protection"], arg_dict['system'])
 
     if(arg_dict["protection"]=="True"):
         plot_classification(data_dict[best_match], best_match, system_conf)

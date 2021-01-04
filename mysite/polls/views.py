@@ -10,7 +10,7 @@ from .models import Question
 from django import forms
 from .datareader import create_graphs, load_data
 
-cps_choices = [('ppcs', 'PPCS'), ('agc', 'AGC')]
+cps_choices = [('ppcs', 'Power Plant Control System'), ('agc', 'Automatic Generation Control')]
 protection_choices = [(True, 'Enable'), (False, 'Disable')]
 mitigation_choices = [(True, 'Enable'), (False, 'Disable')]
 
@@ -22,14 +22,14 @@ class PPCSTDAForm(forms.Form):
     protection = forms.ChoiceField(widget=forms.RadioSelect, choices=protection_choices, label="Attack Detection and Classification")
     # mitigation = forms.ChoiceField(widget=forms.RadioSelect, choices=mitigation_choices, label="Attack Mitigation")
     tda_value = forms.IntegerField(label="TDA Value", max_value=50, min_value=0)
-    tda_location = forms.IntegerField(label="TDA Location", max_value=1200, min_value=800)
+    tda_location = forms.IntegerField(label="TDA Launch Time", max_value=1200, min_value=800)
 
 class AGCTDAForm(forms.Form):
     system = forms.ChoiceField(widget=forms.RadioSelect, choices=cps_choices, label="Cyber Physical System", initial='agc')
     protection = forms.ChoiceField(widget=forms.RadioSelect, choices=protection_choices, label="Attack Detection and Classification")
     # mitigation = forms.ChoiceField(widget=forms.RadioSelect, choices=mitigation_choices, label="Attack Mitigation")
     tda_value = forms.IntegerField(label="TDA Value", max_value=10, min_value=0)
-    tda_location = forms.IntegerField(label="TDA Location", max_value=220, min_value=100)
+    tda_location = forms.IntegerField(label="TDA Launch Time", max_value=220, min_value=100)
 
 # def index(request):
 #     sum = 1 + 2
