@@ -34,7 +34,7 @@ def load_data():
         row_arr = np.array(row)
         # print(row_arr[:20])
         # exit()
-        ppcs_data[(int(row['delay']), int(row['delay_st']))] = (row_arr[9+0*651:9+1*651], row['reg_loc_arr'], row['cls_loc_arr'],
+        ppcs_data[(int(row['delay']), int(row['delay_st']))] = (row_arr[9+0*651:9+1*651]/1e5, row['reg_loc_arr'], row['cls_loc_arr'],
                                                                 row['reg_out_arr'], row['cls_out_arr'],
                                                                 get_array_from_str(row['reg_complete_arr']), get_array_from_str(row['cls_complete_arr']))
         # exit()
@@ -79,7 +79,7 @@ def plot_main_signal(signal_arr, gt_data, conf, protection, system):
 
     plt.title("Original Signal Input")
     if(system=='ppcs'):
-        plt.ylabel('GasFlow Pressure (Pa)')
+        plt.ylabel('GasFlow Pressure (*1e5 Pa)')
     else:
         plt.ylabel('System Frequency (Hz)')
 
