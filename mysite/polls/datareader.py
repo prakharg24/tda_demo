@@ -45,7 +45,7 @@ def load_data():
         row_arr = np.array(row)
         # print(row_arr[:20])
         # exit()
-        agc_data[(int(row['delay']), int(row['delay_st']))] = (row_arr[9+1*76:9+1*76+71], row['reg_loc_arr'], row['cls_loc_arr'],
+        agc_data[(int(row['delay']), int(row['delay_st']))] = (row_arr[9+0*76:9+0*76+71], row['reg_loc_arr'], row['cls_loc_arr'],
                                                                 row['reg_out_arr'], row['cls_out_arr'],
                                                                 get_array_from_str(row['reg_complete_arr']), get_array_from_str(row['cls_complete_arr']))
         # exit()
