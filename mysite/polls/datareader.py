@@ -60,6 +60,8 @@ def load_data():
 def plot_main_signal(signal_arr, gt_data, conf, protection, system):
     global normal_signal
 
+    final_output = {}
+
     y_arr = range(conf['signal_start'], conf['signal_end'] + conf['col_freq'], conf['col_freq'])
     # print(signal_arr[0])
     ymax = np.max(signal_arr[0])
@@ -68,29 +70,37 @@ def plot_main_signal(signal_arr, gt_data, conf, protection, system):
     fig = plt.gcf()
     plt.plot(y_arr, signal_arr[0], color='brown')
     # plt.plot(y_arr[49:], moving_average(normal_signal, 50), color='green')
-    plt.vlines(x=gt_data[1], ymin=ymin, ymax=ymax, color='red')
-    fig.text(0.78, 0.32, "Delay Attack : " + str(gt_data[0]) + " sec, \nlaunched at t=" + str(gt_data[1]), color="red")
+    plt.vlines(x=gt_data[1], ymin=ymin, ymax=ymax, color='red', label='Attack Launced')
+    final_output['attack_value'] = str(gt_data[0])
+    final_output['attack_loc'] = str(gt_data[1])
+    # fig.text(0.78, 0.32, "Delay Attack : " + str(gt_data[0]) + " sec, \nlaunched at t=" + str(gt_data[1]), color="red")
     print(protection)
     if(signal_arr[4]==1 and protection=="True"):
-        plt.vlines(x=signal_arr[2] + conf['col_freq']*conf['lower_step'], ymin=ymin, ymax=ymax, color='blue')
-        fig.text(0.78, 0.26, "Attack Detected at t=" + str(signal_arr[2]), color="blue")
-        plt.vlines(x=signal_arr[1] + conf['col_freq']*conf['lower_step'], ymin=ymin, ymax=ymax, color='green')
-        fig.text(0.78, 0.16, "Delay Value Predicted : " + str(int(signal_arr[3])) + " sec, \nat t=" + str(signal_arr[1]), color="green")
+        plt.vlines(x=signal_arr[2] + conf['col_freq']*conf['lower_step'], ymin=ymin, ymax=ymax, color='blue', label='Attack Detected')
+        final_output['detection_loc'] = str(signal_arr[2])
+        # fig.text(0.78, 0.26, "Attack Detected at t=" + str(signal_arr[2]), color="blue")
+        plt.vlines(x=signal_arr[1] + conf['col_freq']*conf['lower_step'], ymin=ymin, ymax=ymax, color='green', label='Attack Characterized')
+        final_output['prediction_value'] = str(int(signal_arr[3]))
+        final_output['prediction_loc'] = str(signal_arr[1])
+        # fig.text(0.78, 0.16, "Delay Value Predicted : " + str(int(signal_arr[3])) + " sec, \nat t=" + str(signal_arr[1]), color="green")
 
-    plt.title("Original Signal Input")
+    # plt.title("Original Signal Input")
     if(system=='ppcs'):
         plt.ylabel('GasFlow Pressure (*1e5 Pa)')
     else:
         plt.ylabel('System Frequency (Hz)')
 
-    plt.subplots_adjust(right=0.75)
+    plt.legend()
+
+    # plt.subplots_adjust(right=0.75)
     # fig.text(0.84, 0.5, "Something", fontsize=14)
     fig.set_facecolor("yellow")
-    fig.set_size_inches(12, 3.5)
+    fig.set_size_inches(12, 4.5)
     # os.remove('polls/static/polls/signal.png')
     fig.savefig('polls/static/polls/signal.png')
     fig.clf()
 
+    return final_output
 
 def plot_classification(signal_arr, gt_data, conf):
     y_arr = range(conf['signal_start'], conf['signal_end'] + conf['col_freq'], conf['col_freq']*conf['lower_step'])
@@ -116,7 +126,7 @@ def plot_classification(signal_arr, gt_data, conf):
     # plt.set_xlabel("Time (s)")
     fig = plt.gcf()
     fig.set_facecolor("yellow")
-    fig.set_size_inches(12, 2)
+    fig.set_size_inches(12, 2.5)
     # os.remove('polls/static/polls/classification.png')
     fig.savefig('polls/static/polls/classification.png')
     fig.clf()
@@ -142,16 +152,19 @@ def plot_regression(signal_arr, gt_data, conf):
     plt.ylabel("Delay Value (s)")
     fig = plt.gcf()
     fig.set_facecolor("yellow")
-    fig.set_size_inches(12, 2)
+    fig.set_size_inches(12, 2.5)
     # os.remove('polls/static/polls/classification.png')
     fig.savefig('polls/static/polls/regression.png')
     fig.clf()
 
-def create_graphs(arg_dict):
+def create_graphs(arg_dict, system_name):
     global ppcs_data
     global agc_data
     global ppcs_conf
     global agc_conf
+
+    arg_dict["system"] = system_name
+    arg_dict["protection"] = "True"
 
     if(arg_dict["system"]=='ppcs'):
         system_conf = ppcs_conf
@@ -170,8 +183,11 @@ def create_graphs(arg_dict):
 
     print("Best Match : ", best_match)
 
-    plot_main_signal(data_dict[best_match], best_match, system_conf, arg_dict["protection"], arg_dict['system'])
+    attack_details = plot_main_signal(data_dict[best_match], best_match, system_conf, arg_dict["protection"], arg_dict['system'])
+    # plot_text(data_dict[best_match], best_match, system_conf, arg_dict["protection"], arg_dict['system'])
 
     if(arg_dict["protection"]=="True"):
         plot_classification(data_dict[best_match], best_match, system_conf)
         plot_regression(data_dict[best_match], best_match, system_conf)
+
+    return attack_details

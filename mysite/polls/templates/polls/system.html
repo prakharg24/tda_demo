@@ -2,12 +2,12 @@
 <html>
   <head>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'polls/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'polls/styles_system.css' %}">
   </head>
   <body>
     <div class="container">
       <div class="toppane">
-        <b>Time Delay Attack Detection and Characterization Demo</b>
+        <b>Time Delay Attack Detection and Characterization</b>
       </div>
       <div class="leftpane">
         <form action="/polls/" method="post"  enctype="multipart/form-data">
@@ -17,20 +17,19 @@
         </form>
       </div>
 
+      <div class="centerpane">
+        <br>
+        <h2> Power Plant Control System </h2>
+        <br>
+        <img src="{% static 'polls/ppcs.png' %}" alt="PPCS System" width="90%"/>
+      </div>
       <div class="rightpane">
+        <br>
+        <h2> Automatic Generation Control </h2>
+        <br>
+        <img src="{% static 'polls/agc.png' %}" alt="AGC System" width="90%"/>
         <!-- <center> -->
         <!-- {% load static %} -->
-        {% if details %}
-          <img src="{% static 'polls/signal.png' %}" alt="Original Signal" width="90%"/>
-          {% if protection %}
-            <br>
-            <!-- <br> -->
-            <img src="{% static 'polls/classification.png' %}" alt="Classification Output" width="90%"/>
-            <!-- <br> -->
-            <br>
-            <img src="{% static 'polls/regression.png' %}" alt="Regression Output" width="90%"/>
-          {% endif %}
-        {% endif %}
         <!-- </center> -->
       </div>
       <!-- <div style="clear:both; font-size:1px;"></div> -->

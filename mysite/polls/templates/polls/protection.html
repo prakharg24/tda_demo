@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'polls/styles.css' %}">
+  </head>
+  <body>
+    <div class="container">
+      <div class="toppane">
+        <b>Time Delay Attack Detection and Characterization</b>
+      </div>
+      <div class="leftpane">
+        <form action="/polls/" method="post"  enctype="multipart/form-data">
+          {% if protection %}
+            <input type="submit" name="goback" value="Go Back">
+          {% endif %}
+          <b>{% csrf_token %}
+          {{ form.as_p }}</b>
+          <input type="submit" name="apply" value="Apply">
+        </form>
+      </div>
+
+      <div class="centerpane">
+        <!-- <center> -->
+        <!-- {% load static %} -->
+          {% if protection %}
+            <img id="original" src="{% static 'polls/signal.png' %}" alt="Original Signal" width="100%"/>
+            <br>
+            <!-- <br> -->
+            <img src="{% static 'polls/classification.png' %}" alt="Classification Output" width="100%"/>
+            <!-- <br> -->
+            <br>
+            <img src="{% static 'polls/regression.png' %}" alt="Regression Output" width="100%"/>
+          {% endif %}
+        <!-- </center> -->
+      </div>
+      <div class='rightpane'>
+        <br>
+        {% if ppcs %}
+          <h3>Power Plant Control System</h3>
+          <img src="{% static 'polls/ppcs.png' %}" alt="PPCS System" width="80%"/>
+        {% else %}
+          <h3>Automatic Generation Control</h3>
+          <img src="{% static 'polls/agc.png' %}" alt="AGC System" width="80%"/>
+        {% endif %}
+
+        <br>
+        <br>
+        {% if protection %}
+          <p style="color:darkred"><b>Attack Launch Time : {{ attack_loc }} sec</b>
+          <br> <b>Attack Value : {{ attack_value }} sec</b></p>
+          <p style="color:blue"><b>Attack Detected At : {{ detection_loc }} sec</b></p>
+          <p style="color:green"><b>Attack Characterized At : {{ prediction_loc }} sec</b>
+          <br> <b>Predicted Attack Value : {{ prediction_value }} sec</b></p>
+        {% endif %}
+      </div>
+      <!-- <div style="clear:both; font-size:1px;"></div> -->
+    </div>
+    <!-- <script>
+        function sleep(ms) {
+          return new Promise(resolve => setTimeout(resolve, ms));
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+          GFG_Fun();
+          }, false);
+        var up = document.getElementById('original');
+        async function GFG_Fun() {
+            await sleep(2000);
+            // var i;
+            // for (i = 0; i < ; i++) {
+            //   text += cars[i] + "<br>";
+            // }
+            // up.src = 'https://media.geeksforgeeks.org/wp-content/uploads/20190529122828/bs21.png';
+        }
+    </script> -->
+  </body>
+</html>
+
+<!--
+{% if latest_question_list %}
+    <ul>
+    {% for question in latest_question_list %}
+        <li><a href="/polls/{{ question.id }}/">{{ question.question_text }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No polls are available.</p>
+{% endif %} -->
