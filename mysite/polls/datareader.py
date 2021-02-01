@@ -57,7 +57,7 @@ def load_data():
 
     # average_normal = moving_average(normal_signal, 50)
 
-def plot_main_signal(signal_arr, gt_data, conf, protection, system):
+def plot_main_signal(signal_arr, gt_data, conf, protection, system, file_id='', end_index=5000):
     global normal_signal
 
     final_output = {}
@@ -68,18 +68,22 @@ def plot_main_signal(signal_arr, gt_data, conf, protection, system):
     ymin = np.min(signal_arr[0])
     yrange = ymax - ymin
     fig = plt.gcf()
-    plt.plot(y_arr, signal_arr[0], color='brown')
+    plt.xlim([conf['signal_start'] - 20, conf['signal_end'] + conf['col_freq']])
+    plt.plot(y_arr[:end_index], signal_arr[0][:end_index], color='brown')
     # plt.plot(y_arr[49:], moving_average(normal_signal, 50), color='green')
-    plt.vlines(x=gt_data[1], ymin=ymin, ymax=ymax, color='red', label='Attack Launced', linewidth=5.0)
+    if((end_index*conf['col_freq'] + conf['signal_start'])>=gt_data[1]):
+        plt.vlines(x=gt_data[1], ymin=ymin, ymax=ymax, color='red', label='Attack Launced', linewidth=5.0)
     final_output['attack_value'] = str(gt_data[0])
     final_output['attack_loc'] = str(gt_data[1])
     # fig.text(0.78, 0.32, "Delay Attack : " + str(gt_data[0]) + " sec, \nlaunched at t=" + str(gt_data[1]), color="red")
-    print(protection)
+    # print(protection)
     if(signal_arr[4]==1 and protection=="True"):
-        plt.vlines(x=signal_arr[2] + conf['col_freq']*conf['lower_step'], ymin=ymin, ymax=ymax, color='blue', label='Attack Detected', linewidth=5.0)
+        if((end_index*conf['col_freq'] + conf['signal_start'])>=signal_arr[2] + conf['col_freq']*conf['lower_step']):
+            plt.vlines(x=signal_arr[2] + conf['col_freq']*conf['lower_step'], ymin=ymin, ymax=ymax, color='blue', label='Attack Detected', linewidth=5.0)
         final_output['detection_loc'] = str(signal_arr[2])
         # fig.text(0.78, 0.26, "Attack Detected at t=" + str(signal_arr[2]), color="blue")
-        plt.vlines(x=signal_arr[1] + conf['col_freq']*conf['lower_step'], ymin=ymin, ymax=ymax, color='green', label='Attack Characterized', linewidth=5.0)
+        if((end_index*conf['col_freq'] + conf['signal_start'])>=signal_arr[1] + conf['col_freq']*conf['lower_step']):
+            plt.vlines(x=signal_arr[1] + conf['col_freq']*conf['lower_step'], ymin=ymin, ymax=ymax, color='green', label='Attack Characterized', linewidth=5.0)
         final_output['prediction_value'] = str(int(signal_arr[3]))
         final_output['prediction_loc'] = str(signal_arr[1])
         # fig.text(0.78, 0.16, "Delay Value Predicted : " + str(int(signal_arr[3])) + " sec, \nat t=" + str(signal_arr[1]), color="green")
@@ -97,12 +101,12 @@ def plot_main_signal(signal_arr, gt_data, conf, protection, system):
     fig.set_facecolor("yellow")
     fig.set_size_inches(12, 4.5)
     # os.remove('polls/static/polls/signal.png')
-    fig.savefig('polls/static/polls/signal.png')
+    fig.savefig('polls/static/polls/signal' + file_id + '.png')
     fig.clf()
 
     return final_output
 
-def plot_classification(signal_arr, gt_data, conf):
+def plot_classification(signal_arr, gt_data, conf, file_id='', end_index=5000):
     y_arr = range(conf['signal_start'], conf['signal_end'] + conf['col_freq'], conf['col_freq']*conf['lower_step'])
     x_arr = []
     # print(signal_arr)
@@ -120,7 +124,8 @@ def plot_classification(signal_arr, gt_data, conf):
             x_arr.append('No Attack')
         counter += 1
 
-    plt.plot(y_arr[-len(x_arr):], x_arr, color='blue')
+    plt.xlim([conf['signal_start'] - 20, conf['signal_end'] + conf['col_freq']])
+    plt.plot(y_arr[-len(x_arr):][:end_index], x_arr[:end_index], color='blue')
     # plt.yticks([0, 1])
     plt.title("Delay Attack Detection (Updated every " +  str(conf['col_freq']*conf['lower_step']) + " sec)")
     # plt.set_xlabel("Time (s)")
@@ -128,10 +133,10 @@ def plot_classification(signal_arr, gt_data, conf):
     fig.set_facecolor("yellow")
     fig.set_size_inches(12, 2.5)
     # os.remove('polls/static/polls/classification.png')
-    fig.savefig('polls/static/polls/classification.png')
+    fig.savefig('polls/static/polls/classification' + file_id + '.png')
     fig.clf()
 
-def plot_regression(signal_arr, gt_data, conf):
+def plot_regression(signal_arr, gt_data, conf, file_id='', end_index=5000):
     y_arr = range(conf['signal_start'], conf['signal_end'] + conf['col_freq'], conf['col_freq']*conf['lower_step'])
     x_arr = []
     counter = 0
@@ -146,7 +151,8 @@ def plot_regression(signal_arr, gt_data, conf):
             x_arr.append(signal_arr[5][counter]*conf['delay_range'])
         counter += 1
 
-    plt.plot(y_arr[-len(x_arr):], x_arr, color='green')
+    plt.xlim([conf['signal_start'] - 20, conf['signal_end'] + conf['col_freq']])
+    plt.plot(y_arr[-len(x_arr):][:end_index], x_arr[:end_index], color='green')
     # plt.yticks([0, 10, 20, 30, 40, 50])
     plt.title("Delay Attack Characterization (Updated every " +  str(conf['col_freq']*conf['lower_step']) + " sec)")
     plt.ylabel("Delay Value (s)")
@@ -154,7 +160,7 @@ def plot_regression(signal_arr, gt_data, conf):
     fig.set_facecolor("yellow")
     fig.set_size_inches(12, 2.5)
     # os.remove('polls/static/polls/classification.png')
-    fig.savefig('polls/static/polls/regression.png')
+    fig.savefig('polls/static/polls/regression' + file_id + '.png')
     fig.clf()
 
 def create_graphs(arg_dict, system_name):
@@ -183,11 +189,23 @@ def create_graphs(arg_dict, system_name):
 
     print("Best Match : ", best_match)
 
-    attack_details = plot_main_signal(data_dict[best_match], best_match, system_conf, arg_dict["protection"], arg_dict['system'])
-    # plot_text(data_dict[best_match], best_match, system_conf, arg_dict["protection"], arg_dict['system'])
+    # counter_end = system_conf['lower_step']*system_conf['col_freq']
+    counter_end = system_conf['col_freq']
+    counter_id = 1
+    while(counter_end < (system_conf['signal_end']-system_conf['signal_start'])):
+        print(counter_id)
+        signal_counter = int(counter_end/system_conf['col_freq'])
+        attack_details = plot_main_signal(data_dict[best_match], best_match, system_conf, arg_dict["protection"], arg_dict['system'], str(counter_id), signal_counter)
+        # plot_text(data_dict[best_match], best_match, system_conf, arg_dict["protection"], arg_dict['system'])
 
-    if(arg_dict["protection"]=="True"):
-        plot_classification(data_dict[best_match], best_match, system_conf)
-        plot_regression(data_dict[best_match], best_match, system_conf)
+        if(arg_dict["protection"]=="True"):
+            prediction_counter = int(counter_end/(system_conf['col_freq']*system_conf['lower_step']))
+            plot_classification(data_dict[best_match], best_match, system_conf, str(counter_id), prediction_counter)
+            plot_regression(data_dict[best_match], best_match, system_conf, str(counter_id), prediction_counter)
 
+        # counter_end += system_conf['lower_step']*system_conf['col_freq']
+        counter_end += system_conf['col_freq']
+        counter_id += 1
+
+    attack_details['endnum'] = counter_id - 1
     return attack_details

@@ -24,13 +24,13 @@
         <!-- <center> -->
         <!-- {% load static %} -->
           {% if protection %}
-            <img id="original" src="{% static 'polls/signal.png' %}" alt="Original Signal" width="100%"/>
+            <img id="signal" src="{% static 'polls/signal1.png' %}" alt="Original Signal" width="100%"/>
             <br>
             <!-- <br> -->
-            <img src="{% static 'polls/classification.png' %}" alt="Classification Output" width="100%"/>
+            <img id="classification" src="{% static 'polls/classification1.png' %}" alt="Classification Output" width="100%"/>
             <!-- <br> -->
             <br>
-            <img src="{% static 'polls/regression.png' %}" alt="Regression Output" width="100%"/>
+            <img id="regression" src="{% static 'polls/regression1.png' %}" alt="Regression Output" width="100%"/>
           {% endif %}
         <!-- </center> -->
       </div>
@@ -47,42 +47,37 @@
         <br>
         <br>
         {% if protection %}
-          <p style="color:darkred"><b>Attack launched at : {{ attack_loc }} sec</b>
-          <br> <b>Attack value : {{ attack_value }} sec</b></p>
-          <p style="color:blue"><b>Attack detected at : {{ detection_loc }} sec</b></p>
-          <p style="color:green"><b>Attack characterized at : {{ prediction_loc }} sec</b>
-          <br> <b>Predicted attack value : {{ prediction_value }} sec</b></p>
+          {% if update_done %}
+            <p style="color:darkred"><b>Attack launched at : {{ attack_loc }} sec</b>
+            <br> <b>Attack value : {{ attack_value }} sec</b></p>
+            <p style="color:blue"><b>Attack detected at : {{ detection_loc }} sec</b></p>
+            <p style="color:green"><b>Attack characterized at : {{ prediction_loc }} sec</b>
+            <br> <b>Predicted attack value : {{ prediction_value }} sec</b></p>
+          {% endif %}
         {% endif %}
       </div>
       <!-- <div style="clear:both; font-size:1px;"></div> -->
     </div>
-    <!-- <script>
+    <script>
         function sleep(ms) {
           return new Promise(resolve => setTimeout(resolve, ms));
         }
         document.addEventListener('DOMContentLoaded', function() {
           GFG_Fun();
           }, false);
-        var up = document.getElementById('original');
+        var signal = document.getElementById('signal');
+        var classification = document.getElementById('classification');
+        var regression = document.getElementById('regression');
+        var endnum = "{{endnum}}"
         async function GFG_Fun() {
-            await sleep(2000);
-            // var i;
-            // for (i = 0; i < ; i++) {
-            //   text += cars[i] + "<br>";
-            // }
-            // up.src = 'https://media.geeksforgeeks.org/wp-content/uploads/20190529122828/bs21.png';
+            var i;
+            for (i = 1; i < endnum; i++) {
+              await sleep(100);
+              signal.src = "/static/polls/signal" + i + ".png";
+              classification.src = "/static/polls/classification" + i + ".png";
+              regression.src = "/static/polls/regression" + i + ".png";
+            }
         }
-    </script> -->
+    </script>
   </body>
 </html>
-
-<!--
-{% if latest_question_list %}
-    <ul>
-    {% for question in latest_question_list %}
-        <li><a href="/polls/{{ question.id }}/">{{ question.question_text }}</a></li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>No polls are available.</p>
-{% endif %} -->
