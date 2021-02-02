@@ -190,7 +190,8 @@ def create_graphs(arg_dict, system_name):
     print("Best Match : ", best_match)
 
     # counter_end = system_conf['lower_step']*system_conf['col_freq']
-    counter_end = system_conf['col_freq']
+    simulation_frequency = system_conf['lower_step']*system_conf['col_freq']
+    counter_end = simulation_frequency
     counter_id = 1
     while(counter_end < (system_conf['signal_end']-system_conf['signal_start'])):
         print(counter_id)
@@ -204,7 +205,7 @@ def create_graphs(arg_dict, system_name):
             plot_regression(data_dict[best_match], best_match, system_conf, str(counter_id), prediction_counter)
 
         # counter_end += system_conf['lower_step']*system_conf['col_freq']
-        counter_end += system_conf['col_freq']
+        counter_end += simulation_frequency
         counter_id += 1
 
     attack_details['endnum'] = counter_id - 1

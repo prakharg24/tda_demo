@@ -47,13 +47,11 @@
         <br>
         <br>
         {% if protection %}
-          {% if update_done %}
-            <p style="color:darkred"><b>Attack launched at : {{ attack_loc }} sec</b>
-            <br> <b>Attack value : {{ attack_value }} sec</b></p>
-            <p style="color:blue"><b>Attack detected at : {{ detection_loc }} sec</b></p>
-            <p style="color:green"><b>Attack characterized at : {{ prediction_loc }} sec</b>
-            <br> <b>Predicted attack value : {{ prediction_value }} sec</b></p>
-          {% endif %}
+          <p style="color:darkred"><b>Attack launched at : {{ attack_loc }} sec</b>
+          <br> <b>Attack value : {{ attack_value }} sec</b></p>
+          <p style="color:blue"><b>Attack detected at : {{ detection_loc }} sec</b></p>
+          <p style="color:green"><b>Attack characterized at : {{ prediction_loc }} sec</b>
+          <br> <b>Predicted attack value : {{ prediction_value }} sec</b></p>
         {% endif %}
       </div>
       <!-- <div style="clear:both; font-size:1px;"></div> -->
@@ -72,7 +70,7 @@
         async function GFG_Fun() {
             var i;
             for (i = 1; i < endnum; i++) {
-              await sleep(100);
+              await sleep(1000);
               signal.src = "/static/polls/signal" + i + ".png";
               classification.src = "/static/polls/classification" + i + ".png";
               regression.src = "/static/polls/regression" + i + ".png";
