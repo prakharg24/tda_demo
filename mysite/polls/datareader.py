@@ -69,6 +69,7 @@ def plot_main_signal(signal_arr, gt_data, conf, protection, system, file_id='', 
     yrange = ymax - ymin
     fig = plt.gcf()
     plt.xlim([conf['signal_start'] - 20, conf['signal_end'] + conf['col_freq']])
+    plt.ylim([ymin - yrange*0.05, ymax + yrange*0.05])
     plt.plot(y_arr[:end_index], signal_arr[0][:end_index], color='brown')
     # plt.plot(y_arr[49:], moving_average(normal_signal, 50), color='green')
     if((end_index*conf['col_freq'] + conf['signal_start'])>=gt_data[1]):
@@ -83,7 +84,7 @@ def plot_main_signal(signal_arr, gt_data, conf, protection, system, file_id='', 
         final_output['detection_loc'] = str(signal_arr[2])
         # fig.text(0.78, 0.26, "Attack Detected at t=" + str(signal_arr[2]), color="blue")
         if((end_index*conf['col_freq'] + conf['signal_start'])>=signal_arr[1] + conf['col_freq']*conf['lower_step']):
-            plt.vlines(x=signal_arr[1] + conf['col_freq']*conf['lower_step'], ymin=ymin, ymax=ymax, color='green', label='Attack Characterized', linewidth=5.0)
+            plt.vlines(x=signal_arr[1] + conf['col_freq']*conf['lower_step'], ymin=ymin, ymax=ymax, color='green', label='Value Estimated', linewidth=5.0)
         final_output['prediction_value'] = str(int(signal_arr[3]))
         final_output['prediction_loc'] = str(signal_arr[1])
         # fig.text(0.78, 0.16, "Delay Value Predicted : " + str(int(signal_arr[3])) + " sec, \nat t=" + str(signal_arr[1]), color="green")
@@ -126,6 +127,8 @@ def plot_classification(signal_arr, gt_data, conf, file_id='', end_index=5000):
 
     plt.xlim([conf['signal_start'] - 20, conf['signal_end'] + conf['col_freq']])
     plt.plot(y_arr[-len(x_arr):][:end_index], x_arr[:end_index], color='blue')
+    if((end_index*conf['col_freq']*conf['lower_step'] + conf['signal_start'])>=signal_arr[2] + conf['col_freq']*conf['lower_step']):
+        plt.vlines(x=signal_arr[2] + conf['col_freq']*conf['lower_step'], ymin='Attack', ymax='No Attack', color='blue', linewidth=5.0)
     # plt.yticks([0, 1])
     plt.title("Delay Attack Detection (Updated every " +  str(conf['col_freq']*conf['lower_step']) + " sec)")
     # plt.set_xlabel("Time (s)")
@@ -151,10 +154,16 @@ def plot_regression(signal_arr, gt_data, conf, file_id='', end_index=5000):
             x_arr.append(signal_arr[5][counter]*conf['delay_range'])
         counter += 1
 
+    ymax = np.max(x_arr)
+    ymin = np.min(x_arr)
+    yrange = ymax - ymin
+
     plt.xlim([conf['signal_start'] - 20, conf['signal_end'] + conf['col_freq']])
     plt.plot(y_arr[-len(x_arr):][:end_index], x_arr[:end_index], color='green')
+    if((end_index*conf['col_freq']*conf['lower_step'] + conf['signal_start'])>=signal_arr[1] + conf['col_freq']*conf['lower_step']):
+        plt.vlines(x=signal_arr[1] + conf['col_freq']*conf['lower_step'], ymin=ymin, ymax=ymax, color='green', linewidth=5.0)
     # plt.yticks([0, 10, 20, 30, 40, 50])
-    plt.title("Delay Attack Characterization (Updated every " +  str(conf['col_freq']*conf['lower_step']) + " sec)")
+    plt.title("Delay Value Estimation (Updated every " +  str(conf['col_freq']*conf['lower_step']) + " sec)")
     plt.ylabel("Delay Value (s)")
     fig = plt.gcf()
     fig.set_facecolor("yellow")

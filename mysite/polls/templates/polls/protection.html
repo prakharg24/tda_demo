@@ -7,7 +7,7 @@
   <body>
     <div class="container">
       <div class="toppane">
-        <b>Time Delay Attack Detection and Characterization</b>
+        <b>Time Delay Attack Detection and Delay Value Estimation</b>
       </div>
       <div class="leftpane">
         <form action="/polls/" method="post"  enctype="multipart/form-data">
@@ -18,6 +18,9 @@
           {{ form.as_p }}</b>
           <input type="submit" name="apply" value="Apply">
         </form>
+        <br>
+        <br>
+        <button onclick="GFG_Fun()">Restart Simulation</button>
       </div>
 
       <div class="centerpane">
@@ -48,10 +51,10 @@
         <br>
         {% if protection %}
           <p style="color:darkred"><b>Attack launched at : {{ attack_loc }} sec</b>
-          <br> <b>Attack value : {{ attack_value }} sec</b></p>
+          <br> <b>Delay value : {{ attack_value }} sec</b></p>
           <p style="color:blue"><b>Attack detected at : {{ detection_loc }} sec</b></p>
-          <p style="color:green"><b>Attack characterized at : {{ prediction_loc }} sec</b>
-          <br> <b>Predicted attack value : {{ prediction_value }} sec</b></p>
+          <p style="color:green"><b>Delay value estimated at : {{ prediction_loc }} sec</b>
+          <br> <b>Estimated delay value : {{ prediction_value }} sec</b></p>
         {% endif %}
       </div>
       <!-- <div style="clear:both; font-size:1px;"></div> -->
