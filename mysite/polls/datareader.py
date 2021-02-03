@@ -218,4 +218,7 @@ def create_graphs(arg_dict, system_name):
         counter_id += 1
 
     attack_details['endnum'] = counter_id - 1
+    attack_details['launchnum'] = int((int(attack_details['attack_loc']) - system_conf['signal_start'])/simulation_frequency) + 1
+    attack_details['detectnum'] = int((int(attack_details['detection_loc']) - system_conf['signal_start'])/simulation_frequency) + 1
+    attack_details['predictnum'] = int((int(attack_details['prediction_loc']) - system_conf['signal_start'])/simulation_frequency) + 1
     return attack_details

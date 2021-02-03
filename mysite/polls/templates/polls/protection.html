@@ -20,7 +20,9 @@
         </form>
         <br>
         <br>
-        <button onclick="GFG_Fun()">Restart Simulation</button>
+        {% if protection %}
+          <button onclick="GFG_Fun()">Restart Simulation</button>
+        {% endif %}
       </div>
 
       <div class="centerpane">
@@ -50,11 +52,11 @@
         <br>
         <br>
         {% if protection %}
-          <p style="color:darkred"><b>Attack launched at : {{ attack_loc }} sec</b>
-          <br> <b>Delay value : {{ attack_value }} sec</b></p>
-          <p style="color:blue"><b>Attack detected at : {{ detection_loc }} sec</b></p>
-          <p style="color:green"><b>Delay value estimated at : {{ prediction_loc }} sec</b>
-          <br> <b>Estimated delay value : {{ prediction_value }} sec</b></p>
+          <b>
+          <p id="launched" style="color:darkred"></p>
+          <p id="detected" style="color:blue"></p>
+          <p id="predicted" style="color:green"></p>
+          </b>
         {% endif %}
       </div>
       <!-- <div style="clear:both; font-size:1px;"></div> -->
@@ -69,14 +71,34 @@
         var signal = document.getElementById('signal');
         var classification = document.getElementById('classification');
         var regression = document.getElementById('regression');
-        var endnum = "{{endnum}}"
+        var endnum = "{{endnum}}";
+        var detectnum = "{{detectnum}}";
+        var predictnum = "{{predictnum}}";
+        var launchnum = "{{launchnum}}";
+        var attack_loc = "{{attack_loc}}";
+        var attack_value = "{{attack_value}}";
+        var detection_loc = "{{detection_loc}}";
+        var prediction_loc = "{{prediction_loc}}"
+        var prediction_value = "{{prediction_value}}"
         async function GFG_Fun() {
+            document.getElementById('launched').innerHTML = "";
+            document.getElementById('detected').innerHTML = "";
+            document.getElementById('predicted').innerHTML = "";
             var i;
             for (i = 1; i < endnum; i++) {
               await sleep(1000);
               signal.src = "/static/polls/signal" + i + ".png";
               classification.src = "/static/polls/classification" + i + ".png";
               regression.src = "/static/polls/regression" + i + ".png";
+              if (i == launchnum) {
+                document.getElementById('launched').innerHTML = "Attack launched at : " + attack_loc + " sec <br> Delay value : " + attack_value + " sec";
+              }
+              if (i == detectnum) {
+                document.getElementById('detected').innerHTML = "Attack detected at : " + detection_loc + " sec";
+              }
+              if(i == predictnum) {
+                document.getElementById('predicted').innerHTML = "Delay value estimated at : " + prediction_loc + " sec <br> Estimated delay value : " + prediction_value + " sec";
+              }
             }
         }
     </script>
