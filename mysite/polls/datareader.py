@@ -72,8 +72,9 @@ def plot_main_signal(signal_arr, gt_data, conf, protection, system, file_id='', 
     plt.ylim([ymin - yrange*0.05, ymax + yrange*0.05])
     plt.plot(y_arr[:end_index], signal_arr[0][:end_index], color='brown')
     # plt.plot(y_arr[49:], moving_average(normal_signal, 50), color='green')
-    if((end_index*conf['col_freq'] + conf['signal_start'])>=gt_data[1]):
-        plt.vlines(x=gt_data[1], ymin=ymin, ymax=ymax, color='red', label='Attack Launced', linewidth=5.0)
+    if(gt_data[0]!=0):
+        if((end_index*conf['col_freq'] + conf['signal_start'])>=gt_data[1]):
+            plt.vlines(x=gt_data[1], ymin=ymin, ymax=ymax, color='red', label='Attack Launced', linewidth=5.0)
     final_output['attack_value'] = str(gt_data[0])
     final_output['attack_loc'] = str(gt_data[1])
     # fig.text(0.78, 0.32, "Delay Attack : " + str(gt_data[0]) + " sec, \nlaunched at t=" + str(gt_data[1]), color="red")
@@ -127,8 +128,9 @@ def plot_classification(signal_arr, gt_data, conf, file_id='', end_index=5000):
 
     plt.xlim([conf['signal_start'] - 20, conf['signal_end'] + conf['col_freq']])
     plt.plot(y_arr[-len(x_arr):][:end_index], x_arr[:end_index], color='blue')
-    if((end_index*conf['col_freq']*conf['lower_step'] + conf['signal_start'])>=signal_arr[2] + conf['col_freq']*conf['lower_step']):
-        plt.vlines(x=signal_arr[2] + conf['col_freq']*conf['lower_step'], ymin='Attack', ymax='No Attack', color='blue', linewidth=5.0)
+    if(signal_arr[4]==1):
+        if((end_index*conf['col_freq']*conf['lower_step'] + conf['signal_start'])>=signal_arr[2] + conf['col_freq']*conf['lower_step']):
+            plt.vlines(x=signal_arr[2] + conf['col_freq']*conf['lower_step'], ymin='Attack', ymax='No Attack', color='blue', linewidth=5.0)
     # plt.yticks([0, 1])
     plt.title("Delay Attack Detection (Updated every " +  str(conf['col_freq']*conf['lower_step']) + " sec)")
     # plt.set_xlabel("Time (s)")
@@ -160,8 +162,9 @@ def plot_regression(signal_arr, gt_data, conf, file_id='', end_index=5000):
 
     plt.xlim([conf['signal_start'] - 20, conf['signal_end'] + conf['col_freq']])
     plt.plot(y_arr[-len(x_arr):][:end_index], x_arr[:end_index], color='green')
-    if((end_index*conf['col_freq']*conf['lower_step'] + conf['signal_start'])>=signal_arr[1] + conf['col_freq']*conf['lower_step']):
-        plt.vlines(x=signal_arr[1] + conf['col_freq']*conf['lower_step'], ymin=ymin, ymax=ymax, color='green', linewidth=5.0)
+    if(signal_arr[4]==1):
+        if((end_index*conf['col_freq']*conf['lower_step'] + conf['signal_start'])>=signal_arr[1] + conf['col_freq']*conf['lower_step']):
+            plt.vlines(x=signal_arr[1] + conf['col_freq']*conf['lower_step'], ymin=ymin, ymax=ymax, color='green', linewidth=5.0)
     # plt.yticks([0, 10, 20, 30, 40, 50])
     plt.title("Delay Value Estimation (Updated every " +  str(conf['col_freq']*conf['lower_step']) + " sec)")
     plt.ylabel("Delay Value (s)")
@@ -218,7 +221,14 @@ def create_graphs(arg_dict, system_name):
         counter_id += 1
 
     attack_details['endnum'] = counter_id - 1
-    attack_details['launchnum'] = int((int(attack_details['attack_loc']) - system_conf['signal_start'])/simulation_frequency) + 1
-    attack_details['detectnum'] = int((int(attack_details['detection_loc']) - system_conf['signal_start'])/simulation_frequency) + 1
-    attack_details['predictnum'] = int((int(attack_details['prediction_loc']) - system_conf['signal_start'])/simulation_frequency) + 1
+
+    if(int(attack_details['attack_value'])==0):
+        attack_details['launchnum'] = 100
+        attack_details['detectnum'] = 100
+        attack_details['predictnum'] = 100
+    else:
+        attack_details['launchnum'] = int((int(attack_details['attack_loc']) - system_conf['signal_start'])/simulation_frequency) + 1
+        attack_details['detectnum'] = int((int(attack_details['detection_loc']) - system_conf['signal_start'])/simulation_frequency) + 1
+        attack_details['predictnum'] = int((int(attack_details['prediction_loc']) - system_conf['signal_start'])/simulation_frequency) + 1
+
     return attack_details
